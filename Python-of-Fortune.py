@@ -13,6 +13,7 @@
 #######################
 import random
 import copy
+import java.awt.Font as Font
 
 ###########################################################################  
 #################### BEGIN GAME SOUNDS AND WHEEL SPIN #####################
@@ -186,6 +187,7 @@ def pythonOfFortune():
   playerDollars = 1000
   dialogString = "I had no idea you could milk a cat."
   userGuesses = []
+  
   dialogs = loadPhrase(dialogString)
   completeDialog = dialogs[0]
   phraseState = dialogs[1]
@@ -202,11 +204,13 @@ def pythonOfFortune():
   #we have to ask the player to load the game sound file
   dialogFile = pickAFile()
   dialogClip = makeSound(dialogFile)
-  userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState)
+  posterFile = dialogFile[0:dialogFile.index("CST205_FinalProject_MasterSoundFile_mixdown.wav", 0, len(dialogFile))] + "milkCat.png"
+  
+  userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState, posterFile)
   
 #Player Menu
 #You can type exit at any time to leave the game.  
-def userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState):
+def userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState, posterFile):
   
   #Game menu options
   printNow("\n---GAME MENU---\n")
@@ -256,13 +260,13 @@ def userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState
               printNow("\nNumbers are not allowed, please try again.")
               newGuess = true
             else:
-              guessInfo = exeGuess(guessLetter, spinResult, playerDollars, userGuesses, completeDialog, phraseState)
+              guessInfo = exeGuess(guessLetter, spinResult, playerDollars, userGuesses, completeDialog, phraseState, posterFile)
               newGuess = guessInfo[0]
               stillPlaying = guessInfo[1]
               playerDollars = guessInfo[2]
               userGuesses = guessInfo[3]
               phraseState = guessInfo[4]
-              printNow(phraseState)
+              printNow(printList(phraseState))
               if stillPlaying and not newGuess:
                 printNow("\n---GAME MENU---\n")
                 printNow("Type one of the following options:\n")
@@ -277,7 +281,7 @@ def userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState
 #                              Begin Guess Handling 
 ########################################################################### 
 #return (newGuess, stillPlaying, playerDollars, userGuesses, phraseState)
-def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDialog, phraseState):
+def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDialog, phraseState, posterFile):
   
   # Check to see if letter has been guessed already
   if guessLetter in userGuesses:
@@ -305,7 +309,7 @@ def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDia
     
     # If letter is not in quote, deduct money, check for zero money
     if numLetters == 0:
-      printNow("\nYour guess was wrong!\n")
+      printNow("\nYour guess was wrong!")
       playerDollars -= currentAmount
       if playerDollars <= 0:
         gameLost = true
@@ -326,28 +330,37 @@ def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDia
     # If game is won
     elif gameWon:
       playTada()
-      printNow("\nPlayer Total: $" + numString(playerDollars))
+      printNow("\nPlayer Total: $" + str(playerDollars))
       #printNow("Your letter showed up " + str(numLetters) + " times")
       printNow("\nYou won!  Congratulations!")
-      # show poster
+      showPoster(posterFile)
       # play full quote sound?
       return (false, false, playerDollars, userGuesses, phraseState)
     
     # If game is still in progress
     else:
-      printNow("\nPlayer Total: $" + numString(playerDollars))
+      printNow("\nPlayer Total: $" + str(playerDollars))
       #printNow("Your letter showed up " + str(numLetters) + " times")
       return (false, true, playerDollars, userGuesses, phraseState)
 
-# Adds commas in number and returns it as a string
-def numString(num):
-  if num < 1000:
-    return num
-  elif num > 1000000:
-    return (str(int(num/1000000)) + "," + str(int(num/1000)) + "," + str(num%1000))
-  else:
-    return (str(int(num/1000)) + "," + str(num%1000))
+
 
 ###########################################################################  
 #                              End Guess Handling 
 ########################################################################### 
+def showPoster(posterFile):
+  pic = makePicture(posterFile)
+  xStart = 60
+  yStart = getHeight(pic) - 20
+  text = "Congratulations, You Won!"
+  style = makeStyle(sansSerif, bold + italic, 20)
+  
+  addTextWithStyle(pic, xStart-1, yStart-1, text, style, white)
+  addTextWithStyle(pic, xStart+1, yStart+1, text, style, white)
+  addTextWithStyle(pic, xStart-1, yStart+1, text, style, white)
+  addTextWithStyle(pic, xStart+1, yStart-1, text, style, white)
+  addTextWithStyle(pic, xStart, yStart, text, style, blue)
+  show(pic)
+  
+  
+  
