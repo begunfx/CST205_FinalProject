@@ -184,6 +184,11 @@ def pythonOfFortune():
 
   #Player starting dollar amount initialized
   playerDollars = 1000
+  dialogString = "I had no idea you could milk a cat."
+  userGuesses = []
+  dialogs = loadPhrase(dialogString)
+  completeDialog = dialogs[0]
+  phraseState = dialogs[1]
   
   #Welcome Screen
   printNow("\n|======================|")
@@ -197,11 +202,11 @@ def pythonOfFortune():
   #we have to ask the player to load the game sound file
   dialogFile = pickAFile()
   dialogClip = makeSound(dialogFile)
-  userMenu(dialogClip)
+  userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState)
   
 #Player Menu
 #You can type exit at any time to leave the game.  
-def userMenu(dialogClip):
+def userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState):
   
   #Game menu options
   printNow("\n---GAME MENU---\n")
@@ -228,7 +233,7 @@ def userMenu(dialogClip):
         stillPlaying = false
         return
       elif choice == "spin":
-        #spinResult = spinWheel()
+        spinResult = spinWheel()
         newGuess = true
         while newGuess == true:
           guessLetter = requestString("Please guess a letter")
@@ -250,6 +255,99 @@ def userMenu(dialogClip):
             elif guessLetter.isnumeric():
               printNow("\nNumbers are not allowed, please try again.")
               newGuess = true
+            else:
+              guessInfo = exeGuess(guessLetter, spinResult, playerDollars, userGuesses, completeDialog, phraseState)
+              newGuess = guessInfo[0]
+              stillPlaying = guessInfo[1]
+              playerDollars = guessInfo[2]
+              userGuesses = guessInfo[3]
+              phraseState = guessInfo[4]
+              printNow(phraseState)
+              if stillPlaying and not newGuess:
+                printNow("\n---GAME MENU---\n")
+                printNow("Type one of the following options:\n")
+                printNow("spin - spin the wheel and guess a letter")
+                printNow("play sound - play the completed part of the puzzle")
+                printNow("exit - type at anytime to quit the game.")
       else:
         printNow("\nThat's not an option, please try again.")
         stillPlaying = true      
+
+###########################################################################  
+#                              Begin Guess Handling 
+########################################################################### 
+#return (newGuess, stillPlaying, playerDollars, userGuesses, phraseState)
+def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDialog, phraseState):
+  
+  # Check to see if letter has been guessed already
+  if guessLetter in userGuesses:
+    playBuzzer()
+    printNow("\nYou already guessed that letter.  Please pick a new one.")
+    return (true, true, playerDollars, userGuesses, phraseState)
+  
+  # If letter hasn't been guessed already
+  else:
+    userGuesses.append(guessLetter)
+    numLetters = 0
+    gameWon = true
+    gameLost = false
+    
+    # Check quote for letter
+    for w in range(0, len(completeDialog)):
+      for l in range(0, len(completeDialog[w])):
+        # If letter exists in quote, count how many and put in phraseState
+        if completeDialog[w][l].lower() == guessLetter:
+          phraseState[w][l] = completeDialog[w][l]
+          numLetters += 1
+        # If there are still underscores in phraseState, game is not won
+        elif phraseState[w][l] == "_":
+          gameWon = false
+    
+    # If letter is not in quote, deduct money, check for zero money
+    if numLetters == 0:
+      printNow("\nYour guess was wrong!\n")
+      playerDollars -= currentAmount
+      if playerDollars <= 0:
+        gameLost = true
+      else:
+        play3Buzzer()
+        
+    # If letter is in quote, add money
+    else:
+      play3Ding()
+      playerDollars += currentAmount * numLetters
+      
+    # If game is lost
+    if gameLost:
+      playWahWahWah()
+      printNow("\nYou ran out of money and lost.")
+      return (false, false, playerDollars, userGuesses, phraseState)
+    
+    # If game is won
+    elif gameWon:
+      playTada()
+      printNow("\nPlayer Total: $" + numString(playerDollars))
+      #printNow("Your letter showed up " + str(numLetters) + " times")
+      printNow("\nYou won!  Congratulations!")
+      # show poster
+      # play full quote sound?
+      return (false, false, playerDollars, userGuesses, phraseState)
+    
+    # If game is still in progress
+    else:
+      printNow("\nPlayer Total: $" + numString(playerDollars))
+      #printNow("Your letter showed up " + str(numLetters) + " times")
+      return (false, true, playerDollars, userGuesses, phraseState)
+
+# Adds commas in number and returns it as a string
+def numString(num):
+  if num < 1000:
+    return num
+  elif num > 1000000:
+    return (str(int(num/1000000)) + "," + str(int(num/1000)) + "," + str(num%1000))
+  else:
+    return (str(int(num/1000)) + "," + str(num%1000))
+
+###########################################################################  
+#                              End Guess Handling 
+########################################################################### 
