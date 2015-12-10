@@ -223,7 +223,7 @@ def userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState
   stillPlaying = true
   choice = None
   while stillPlaying:
-    choice = requestString("Make your selection: ")
+    choice = raw_input("Make your selection: ")
     if choice == None:
       printNow("\nThat's not an option, please try again.")
       stillPlaying = true
@@ -240,7 +240,7 @@ def userMenu(dialogClip, playerDollars, userGuesses, completeDialog, phraseState
         spinResult = spinWheel()
         newGuess = true
         while newGuess == true:
-          guessLetter = requestString("Please guess a letter")
+          guessLetter = raw_input("Please guess a letter: ")
           if guessLetter == None:
             printNow("\nThat's not an option, please try again.")
             newGuess == true
