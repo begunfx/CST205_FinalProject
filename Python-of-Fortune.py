@@ -14,6 +14,7 @@
 import random
 import copy
 import java.awt.Font as Font
+import os
 
 ###########################################################################  
 #################### BEGIN GAME SOUNDS AND WHEEL SPIN #####################
