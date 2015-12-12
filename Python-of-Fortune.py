@@ -199,9 +199,12 @@ def pythonOfFortune():
   
   #Because we cannot set relative path in this itteration of JES
   #we have to ask the player to load the game sound file
-  showInformation("Before playing the game you must load this sound file:\nCST205_FinalProject_MasterSoundFile_mixdown.wav")
-
-  dialogFile = pickAFile()
+  showInformation("Before playing the game you must load this folder:\n/assets")
+  
+  folder = pickAFolder()
+  #assets = os.listdir(folder)
+  dialogFile = folder + str("CST205_FinalProject_MasterSoundFile_mixdown.wav")
+  #dialogFile = pickAFile()
   dialogClip = makeSound(dialogFile)
   posterFile = dialogFile[0:dialogFile.index("CST205_FinalProject_MasterSoundFile_mixdown.wav", 0, len(dialogFile))] + "milkCat.png"
   
