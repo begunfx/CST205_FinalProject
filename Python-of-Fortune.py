@@ -197,11 +197,10 @@ def pythonOfFortune():
   printNow("Welcome to the PYTHON OF FORTUNE!")
   printNow("\n")
   
-  printNow("Before playing the game you must load the")
-  printNow("sound file.")
-  
   #Because we cannot set relative path in this itteration of JES
   #we have to ask the player to load the game sound file
+  showInformation("Before playing the game you must load this sound file:\nCST205_FinalProject_MasterSoundFile_mixdown.wav")
+
   dialogFile = pickAFile()
   dialogClip = makeSound(dialogFile)
   posterFile = dialogFile[0:dialogFile.index("CST205_FinalProject_MasterSoundFile_mixdown.wav", 0, len(dialogFile))] + "milkCat.png"
