@@ -175,7 +175,7 @@ def printList(phraseList):
   lstSentence = "" 
   for i in range(0, len(prntList)):
     wrd = prntList[i]
-    spc1 = "  " # spaces between words
+    spc1 = "   " # spaces between words
     spc2 = " " # spaces between blanks
     wrd.append(spc1) # add space to end of word
     for j in range(0, len(wrd)):
@@ -267,7 +267,8 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
   stillPlaying = true
   choice = None
   while stillPlaying:
-    choice = raw_input("Make your selection: ")
+    printNow("Make your selection:")
+    choice = raw_input("")
     if choice == None:
       printNow("\nThat's not an option, please try again.")
       stillPlaying = true
@@ -276,10 +277,12 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
       stillPlaying = true
     else:
       choice = choice.lower()
+      # exit the game
       if choice == "exit":
-        printNow("\nYou're quitting?  You suck!  Goodbye.")
+        printNow("\nSorry to see you go, goodbye!")
         stillPlaying = false
         return
+      # spin the wheel
       elif choice == "spin":
         spinResult = spinWheel()
         newGuess = true
@@ -293,17 +296,20 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
             newGuess = true
           else:
             guessLetter = guessLetter.lower()
+            # if exit
             if guessLetter == "exit":
-              printNow("\nYou're giving up all that money?  Okay.  See ya.")
+              printNow("\nSorry to see you go, goodbye!")
               newGuess = false
               return
+            # if more than one char entered
             if len(guessLetter) > 1:
               printNow("\nOne character only, please try again.")
               newGuess = true
+            # if char is not alphabetic
             elif not guessLetter.isalpha():
               printNow("\nOnly alphabetic letter are allowed, please try again.")
               newGuess = true
-            # if single letter entered
+            # if single letter entered, execute guess
             else:
               guessInfo = exeGuess(guessLetter, spinResult, playerDollars, userGuesses, completeDialog, phraseState, posterFile)
               newGuess = guessInfo[0]
@@ -318,6 +324,7 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
                 printNow("[spin] - spin the wheel and guess a letter")
                 printNow("[play sound] - play the completed part of the puzzle")
                 printNow("[exit] - type at anytime to quit the game.\n")
+      # play sound
       elif choice == "play sound":
         playSound(phraseState)
         printNow("\n[ " + printList(phraseState) + " ] \nPlayer total: $" + str(playerDollars))
@@ -382,10 +389,10 @@ def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDia
     # If game is won
     elif gameWon:
       playTada()
-      time.sleep(3)
       printNow("\nPlayer Total: $" + str(playerDollars))
       printNow("\nYou won!  Congratulations!")
       showPoster(posterFile, phraseState)
+      time.sleep(2)
       playSound(phraseState)
       return (false, false, playerDollars, userGuesses, phraseState)
     
@@ -406,7 +413,7 @@ def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDia
 ###########################################################################  
 #                              End Guess Handling 
 ########################################################################### 
-
+# Show movie picture when won 
 def showPoster(posterFile, phraseState):
   # congrats message
   pic = makePicture(posterFile)
@@ -429,7 +436,8 @@ def showPoster(posterFile, phraseState):
     xtStart = 12
     xStart = 143
     title = "Spaceballs"
-    
+  
+  # Display title on pic
   addTextWithStyle(pic, xStart-1, yStart-1, title, style, blue)
   addTextWithStyle(pic, xStart+1, yStart+1, title, style, blue)
   addTextWithStyle(pic, xStart-1, yStart+1, title, style, blue)
@@ -440,6 +448,7 @@ def showPoster(posterFile, phraseState):
   yStart = yStart + 20
   style = makeStyle(sansSerif, bold, 15)
   
+  # Display quote on pic
   addTextWithStyle(pic, xtStart-1, yStart-1, text, style, white)
   addTextWithStyle(pic, xtStart+1, yStart+1, text, style, white)
   addTextWithStyle(pic, xtStart-1, yStart+1, text, style, white)
@@ -456,8 +465,6 @@ def playSound(phraseState):
   wordIndex = 0
   clipSample = 0
   clipEmpty = true
-  #phraseState = printList(phraseState)
-  #for word in phraseState.split(" "):
   for word in phraseState:
     wordComplete = true
     for letter in word:
@@ -477,7 +484,7 @@ def playSound(phraseState):
     wordIndex = wordIndex + 1
   play(clip)
   if clipEmpty:
-    printNow("\nSound will only play when you have completed entire words./n")
+    printNow("\nSound will only play when you have completed entire words.\n")
 ###########################################################################  
 #                              End PlaySound
 ########################################################################### 
