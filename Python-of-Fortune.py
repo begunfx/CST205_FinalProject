@@ -14,6 +14,7 @@
 import random
 import copy
 import os
+import time
 
 
 
@@ -24,6 +25,7 @@ import os
 soundSource = makeEmptySound(1,1)
 phraseList = []
 clip = makeEmptySound(1, 1)
+picFile = makeEmptyPicture(1, 1)
 
 
 
@@ -197,9 +199,10 @@ def quoteInitialize():
   quotes = ["I had no idea you could milk a cat.", "There's no crying in baseball!", "What's a matter, Colonel Sandurz? CHICKEN"]
   clips = [makeEmptySound(112400, 44100), makeEmptySound(229530, 44100), makeEmptySound(150811, 44100)]
   phraseLists = [[["I", 20431, 25734],["had", 25734, 36500], ["no", 36500, 45000],["idea", 45000, 53426],["you", 53426, 66109],["could",66109, 77925],["milk", 77925, 89190],["a", 89190,95396],["cat", 95396, 112400]], [["There's", 132698, 143702],["no", 143702, 153574],["crying", 153574, 174245], ["in", 174245, 184940], ["baseball!", 184940, 229530]], [["What's", 252757, 257441], ["a", 257441, 267960], ["matter", 267960, 282749], ["Colonel", 282749, 296360], ["Sandurz?", 296360, 346606], ["CHICKEN", 346606, 403568]]]
-
+  posterFile = ["milkCat.png", "baseball.jpg", "chicken.png"]
+  
   quoteNum = random.randint(0, len(quotes)-1)
-  return (quotes[quoteNum], clips[quoteNum], phraseLists[quoteNum])
+  return (quotes[quoteNum], clips[quoteNum], phraseLists[quoteNum], posterFile[quoteNum])
 
 #Start the game function
 def pythonOfFortune():
@@ -229,14 +232,14 @@ def pythonOfFortune():
   #we have to ask the player to load the game sound file
   folder = ""
   while folder.find("assets") < 0:
-    showInformation("Before playing the game you must load this folder:\n 'assets'")
+    showInformation("Please select this folder to play the game:\n 'assets'")
     folder = pickAFolder()
     if folder == None:
       folder = ""
   #assets = os.listdir(folder)
   dialogFile = folder + str("CST205_FinalProject_MasterSoundFile_mixdown.wav")
   soundSource = makeSound(dialogFile)
-  posterFile = dialogFile[0:dialogFile.index("CST205_FinalProject_MasterSoundFile_mixdown.wav", 0, len(dialogFile))] + "milkCat.png"
+  posterFile = dialogFile[0:dialogFile.index("CST205_FinalProject_MasterSoundFile_mixdown.wav", 0, len(dialogFile))] + initQuote[3]
   
   userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile)
   
@@ -251,11 +254,11 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
   printNow("letter in the quote.  If the guess is incorrect, you")
   printNow("lose that money.  You begin with $" + str(playerDollars) + ".")
   printNow("\nHere's your quote.  Good luck!\n")
-  printNow("  [ " + printList(phraseState) + " ]")
   
   #Game menu options
-  printNow("\n\n---------------GAME MENU---------------\n")
-  printNow("Type one of the following options:\n")
+  printNow("\n[ " + printList(phraseState) + " ] \nPlayer total: $" + str(playerDollars))
+  printNow("\n---------------GAME MENU---------------")
+  printNow("Type one of the following options:")
   printNow("[spin] - spin the wheel and guess a letter")
   printNow("[play sound] - play the completed part of the puzzle")
   printNow("[exit] - type at anytime to quit the game.\n")
@@ -308,17 +311,18 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
               playerDollars = guessInfo[2]
               userGuesses = guessInfo[3]
               phraseState = guessInfo[4]
-              printNow("   [ " + printList(phraseState) + "  ]")
+              printNow("\n[ " + printList(phraseState) + " ] \nPlayer total: $" + str(playerDollars))
               if stillPlaying and not newGuess:
-                printNow("\n\n---------------GAME MENU---------------\n")
-                printNow("Type one of the following options:\n")
+                printNow("\n---------------GAME MENU---------------")
+                printNow("Type one of the following options:")
                 printNow("[spin] - spin the wheel and guess a letter")
                 printNow("[play sound] - play the completed part of the puzzle")
                 printNow("[exit] - type at anytime to quit the game.\n")
       elif choice == "play sound":
         playSound(phraseState)
-        printNow("\n\n---------------GAME MENU---------------\n")
-        printNow("Type one of the following options:\n")
+        printNow("\n[ " + printList(phraseState) + " ] \nPlayer total: $" + str(playerDollars))
+        printNow("\n---------------GAME MENU---------------")
+        printNow("Type one of the following options:")
         printNow("[spin] - spin the wheel and guess a letter")
         printNow("[play sound] - play the completed part of the puzzle")
         printNow("[exit] - type at anytime to quit the game.\n")
@@ -363,12 +367,10 @@ def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDia
       playerDollars -= currentAmount
       if playerDollars <= 0:
         gameLost = true
-      else:
-        play3Buzzer()
         
     # If letter is in quote, add money
     else:
-      play3Ding()
+      
       playerDollars += currentAmount * numLetters
       
     # If game is lost
@@ -380,19 +382,23 @@ def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDia
     # If game is won
     elif gameWon:
       playTada()
+      time.sleep(3)
       printNow("\nPlayer Total: $" + str(playerDollars))
       printNow("\nYou won!  Congratulations!")
       showPoster(posterFile, phraseState)
-      # play full quote sound?
+      playSound(phraseState)
       return (false, false, playerDollars, userGuesses, phraseState)
     
     # If game is still in progress
     else:
       if numLetters == 1:
+        play3Ding()
         printNow("\nThere is 1 '" + guessLetter.upper() + "', for $" + str(currentAmount))
       elif numLetters > 1:
+        play3Ding()
         printNow("\nThere are " + str(numLetters) + " '" + guessLetter.upper() + "'s, for $" + str(currentAmount*numLetters))
-      printNow("\nPlayer Total: $" + str(playerDollars))
+      else:
+        play3Buzzer()
       return (false, true, playerDollars, userGuesses, phraseState)
 
 
@@ -449,6 +455,7 @@ def showPoster(posterFile, phraseState):
 def playSound(phraseState): 
   wordIndex = 0
   clipSample = 0
+  clipEmpty = true
   #phraseState = printList(phraseState)
   #for word in phraseState.split(" "):
   for word in phraseState:
@@ -457,6 +464,7 @@ def playSound(phraseState):
       if letter == "_":
         wordComplete = false
     if wordComplete == true:
+      clipEmpty = false
       for sample in range(phraseList[wordIndex][1], phraseList[wordIndex][2]):
         value = getSampleValueAt(soundSource, sample)
         setSampleValueAt(clip, clipSample, value)
@@ -468,6 +476,8 @@ def playSound(phraseState):
         clipSample = clipSample + 1     
     wordIndex = wordIndex + 1
   play(clip)
+  if clipEmpty:
+    printNow("\nSound will only play when you have completed entire words./n")
 ###########################################################################  
 #                              End PlaySound
 ########################################################################### 
