@@ -8,6 +8,8 @@
 #      12_07_2015                #
 ##################################
 
+pythonOfFortune()
+
 #######################
 # import modules area #
 #######################
@@ -19,7 +21,7 @@ import time
 
 
 ############################################
-# global stuff for playSound - move later  #
+# global variables
 ############################################
 
 soundSource = makeEmptySound(1,1)
@@ -195,12 +197,14 @@ def printList(phraseList):
 ###########################################################################
 
 # Initialize game quotes and sounds from random list
+# Will return dialogString, clip, phraseList, 
 def quoteInitialize():
   quotes = ["I had no idea you could milk a cat.", "There's no crying in baseball!", "What's a matter, Colonel Sandurz? CHICKEN"]
   clips = [makeEmptySound(112400, 44100), makeEmptySound(229530, 44100), makeEmptySound(150811, 44100)]
   phraseLists = [[["I", 20431, 25734],["had", 25734, 36500], ["no", 36500, 45000],["idea", 45000, 53426],["you", 53426, 66109],["could",66109, 77925],["milk", 77925, 89190],["a", 89190,95396],["cat", 95396, 112400]], [["There's", 132698, 143702],["no", 143702, 153574],["crying", 153574, 174245], ["in", 174245, 184940], ["baseball!", 184940, 229530]], [["What's", 252757, 257441], ["a", 257441, 267960], ["matter", 267960, 282749], ["Colonel", 282749, 296360], ["Sandurz?", 296360, 346606], ["CHICKEN", 346606, 403568]]]
   posterFile = ["milkCat.png", "baseball.jpg", "chicken.png"]
   
+  # get random quote
   quoteNum = random.randint(0, len(quotes)-1)
   return (quotes[quoteNum], clips[quoteNum], phraseLists[quoteNum], posterFile[quoteNum])
 
@@ -272,6 +276,7 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
     if choice == None:
       printNow("\nThat's not an option, please try again.")
       stillPlaying = true
+    # if nothing entered
     elif choice == "":
       printNow("\nYou didn't enter anything, please try again.")
       stillPlaying = true
@@ -312,6 +317,7 @@ def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile
             # if single letter entered, execute guess
             else:
               guessInfo = exeGuess(guessLetter, spinResult, playerDollars, userGuesses, completeDialog, phraseState, posterFile)
+              # update game variables
               newGuess = guessInfo[0]
               stillPlaying = guessInfo[1]
               playerDollars = guessInfo[2]
@@ -391,8 +397,8 @@ def exeGuess(guessLetter, currentAmount, playerDollars, userGuesses, completeDia
       playTada()
       printNow("\nPlayer Total: $" + str(playerDollars))
       printNow("\nYou won!  Congratulations!")
+      time.sleep(2) # delay the poster & quote audio
       showPoster(posterFile, phraseState)
-      time.sleep(2)
       playSound(phraseState)
       return (false, false, playerDollars, userGuesses, phraseState)
     
@@ -461,6 +467,7 @@ def showPoster(posterFile, phraseState):
 ###########################################################################  
 #                              Begin playSound
 ########################################################################### 
+# Will play the quote with empty sound during incomplete words
 def playSound(phraseState): 
   wordIndex = 0
   clipSample = 0
@@ -483,6 +490,7 @@ def playSound(phraseState):
         clipSample = clipSample + 1     
     wordIndex = wordIndex + 1
   play(clip)
+  # If there are no completed words yet, notify player
   if clipEmpty:
     printNow("\nSound will only play when you have completed entire words.\n")
 ###########################################################################  
