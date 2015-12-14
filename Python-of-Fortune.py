@@ -20,37 +20,11 @@ import os
 ############################################
 # global stuff for playSound - move later  #
 ############################################
-noCry = makeEmptySound(229530, 44100) #length, rate
-noCryList = [["There's", 132698, 143702],["no", 143702, 153574],["crying", 153574, 174245], ["in", 174245, 184940], ["baseball!", 184940, 229530]]
 
-milkCat =  makeEmptySound(112400, 44100)
-milkCatList = [["I", 20431, 25734],["had", 25734, 36500], ["no", 36500,	45000],["idea", 45000, 53426],["you", 53426, 66109],["could",66109, 77925],["milk", 77925, 89190],["a", 89190,95396],["cat", 95396, 112400]]
-
-chicken = makeEmptySound(150811, 44100)
-chickenList = [["What's", 252757, 257441], ["a", 257441, 267960], ["matter", 267960, 282749], ["Colonel", 282749, 296360], ["Sandurz?", 296360, 346606], ["CHICKEN", 346606, 403568]]
-
-
-#soundFile = pickAFile() #original sound file
 soundSource = makeEmptySound(1,1)
 phraseList = []
 clip = makeEmptySound(1, 1)
 
-#milkCatState = "I had no idea you could mi_k a cat."
-#noCryState = "There's n_ crying in baseball."
-#chickenState = "What's a matter Col_nel Sandurz, chicken?"
-
-
-#phraseList = milkCatList
-#state = milkCatState
-#clip = milkCat
-
-#phraseList = chickenList
-#state = chickenState
-#clip = chicken
-
-#phraseList = noCryList
-#state = noCryState
-#clip = noCry
 
 
 ###########################################################################  
@@ -71,16 +45,16 @@ clip = makeEmptySound(1, 1)
 #############################################################
 def spinWheel():
   for i in range(100,1500,700):
-    rand = random.randint(1,9) * 100 + random.randint(1,9) * 10
+    rand = random.randint(1,9) * 100 + random.randint(0,9) * 10
     printNow(">>> $" + str(rand))
     playNote(125, i + 10,127) 
-    rand = random.randint(1,9) * 100 + random.randint(1,9) * 10
+    rand = random.randint(1,9) * 100 + random.randint(0,9) * 10
     printNow(">>> $" + str(rand))
     playNote(125, i + 80,127)
-    rand = random.randint(1,9) * 100 +  random.randint(1,9) * 10
+    rand = random.randint(1,9) * 100 +  random.randint(0,9) * 10
     printNow(">>> $" + str(rand))
     playNote(125, i + 160,127)
-  randomNum = random.randint(1,9) * 100 + random.randint(1,9) * 10
+  randomNum = random.randint(1,9) * 100 + random.randint(0,9) * 10
   printNow("$$$$$$$$>~~~~~~~<$$$$$$$$")
   printNow("$$$$$$$$$> $" + str(randomNum) + " <$$$$$$$$$")
   printNow("$$$$$$$$>~~~~~~~<$$$$$$$$\n")
