@@ -71,16 +71,16 @@ clip = milkCat
 #############################################################
 def spinWheel():
   for i in range(100,1500,700):
-    rand = random.randint(1,10) * 100 + random.randint(1,10) * 10
+    rand = random.randint(1,9) * 100 + random.randint(1,10) * 10
     printNow(">>> $" + str(rand))
     playNote(125, i + 10,127) 
-    rand = random.randint(1,10) * 100 + random.randint(1,10) * 10
+    rand = random.randint(1,9) * 100 + random.randint(1,10) * 10
     printNow(">>> $" + str(rand))
     playNote(125, i + 80,127)
-    rand = random.randint(1,10) * 100 +  random.randint(1,10) * 10
+    rand = random.randint(1,9) * 100 +  random.randint(1,10) * 10
     printNow(">>> $" + str(rand))
     playNote(125, i + 160,127)
-  randomNum = random.randint(1,10) * 100 + random.randint(1,10) * 10
+  randomNum = random.randint(1,9) * 100 + random.randint(1,10) * 10
   printNow("$$$$$$$$>~~~~~~~<$$$$$$$$")
   printNow("$$$$$$$$$> $" + str(randomNum) + " <$$$$$$$$$")
   printNow("$$$$$$$$>~~~~~~~<$$$$$$$$")
