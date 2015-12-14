@@ -16,6 +16,43 @@ import copy
 import java.awt.Font as Font
 import os
 
+
+
+############################################
+# global stuff for playSound - move later  #
+############################################
+noCry = makeEmptySound(229530, 44100) #length, rate
+noCryList = [["There's", 132698, 143702],["no", 143702, 153574],["crying", 153574, 174245], ["in", 174245, 184940], ["baseball!", 184940, 229530]]
+
+milkCat =  makeEmptySound(112400, 44100)
+milkCatList = [["I", 20431, 25734],["had", 25734, 36500], ["no", 36500,	45000],["idea", 45000,	53426],["you", 53426,	66109],["could",66109, 77925],["milk", 77925, 89190],["a", 89190,	95396],["cat", 95396, 112400]]
+
+chicken = makeEmptySound(150811, 44100)
+chickenList = [["What's", 252757, 257441], ["a", 257441, 267960], ["matter", 267960, 282749], ["Colonel", 282749, 296360], ["Sandurz?", 296360, 346606], ["CHICKEN", 346606, 403568]]
+
+
+soundFile = pickAFile() #original sound file
+soundSource = makeSound(soundFile)
+
+
+milkCatState = "I had no idea you could mi_k a cat."
+noCryState = "There's n_ crying in baseball."
+chickenState = "What's a matter Col_nel Sandurz, chicken?"
+
+
+phraseList = milkCatList
+state = milkCatState
+clip = milkCat
+
+#phraseList = chickenList
+#state = chickenState
+#clip = chicken
+
+#phraseList = noCryList
+#state = noCryState
+#clip = noCry
+
+
 ###########################################################################  
 #################### BEGIN GAME SOUNDS AND WHEEL SPIN #####################
 ###########################################################################
@@ -366,4 +403,31 @@ def showPoster(posterFile):
   show(pic)
   
   
-  
+###########################################################################  
+#                              Begin playSound
+########################################################################### 
+def playSound(phraseState, phraseList): 
+  wordIndex = 0
+  clipSample = 0
+  for word in phraseState.split(" "):
+    wordComplete = true
+    for letter in word:
+      if letter == "_":
+        wordComplete = false
+    if wordComplete == true:
+      for sample in range(phraseList[wordIndex][1], phraseList[wordIndex][2]):
+        value = getSampleValueAt(soundSource, sample)
+        setSampleValueAt(clip, clipSample, value)
+        clipSample = clipSample + 1
+    else:
+      for sample in range(phraseList[wordIndex][1], phraseList[wordIndex][2]):
+        value = getSampleValueAt(soundSource, sample)
+        setSampleValueAt(clip, clipSample, 0)
+        clipSample = clipSample + 1     
+    wordIndex = wordIndex + 1
+  play(clip)
+###########################################################################  
+#                              End PlaySound
+########################################################################### 
+
+
