@@ -8,8 +8,6 @@
 #      12_07_2015                #
 ##################################
 
-pythonOfFortune()
-
 #######################
 # import modules area #
 #######################
@@ -17,8 +15,6 @@ import random
 import copy
 import os
 import time
-
-
 
 ############################################
 # global variables
@@ -245,8 +241,8 @@ def pythonOfFortune():
   soundSource = makeSound(dialogFile)
   posterFile = dialogFile[0:dialogFile.index("CST205_FinalProject_MasterSoundFile_mixdown.wav", 0, len(dialogFile))] + initQuote[3]
   
-  userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile)
-  
+  userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile)  
+      
 #Player Menu
 #You can type exit at any time to leave the game.  
 def userMenu(playerDollars, userGuesses, completeDialog, phraseState, posterFile):
@@ -498,3 +494,12 @@ def playSound(phraseState):
 ########################################################################### 
 
 
+
+###########################################################################
+###########################################################################
+###########################################################################  
+########################## LETS PLAY THE GAME!!!!!#########################
+###########################################################################
+###########################################################################
+########################################################################### 
+pythonOfFortune()
