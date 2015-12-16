@@ -5,7 +5,7 @@
 #      Brian Begun               #
 #                                #
 #      ver 12.07.15              #
-#      12_07_2015                #
+#      12_15_2015                #
 ##################################
 
 #######################
@@ -235,7 +235,8 @@ def pythonOfFortune():
     showInformation("Please select this folder to play the game:\n 'assets'")
     folder = pickAFolder()
     if folder == None:
-      folder = ""
+      printNow("\nSorry to see you go, goodbye!")
+      return
   #assets = os.listdir(folder)
   dialogFile = folder + str("CST205_FinalProject_MasterSoundFile_mixdown.wav")
   soundSource = makeSound(dialogFile)
@@ -423,19 +424,22 @@ def showPoster(posterFile, phraseState):
   text = "Congratulations, You Won!"
   style = makeStyle(sansSerif, bold + italic, 20)
   
-  
   # Quote selection for centering
-  text = printList(phraseState)
+  oldText = printList(phraseState)
+  text = ""
+  for word in oldText.split("   "):
+    text += word + " "
+  
   if text[0] == "I":
-    xtStart = 45
+    xtStart = 64
     xStart = 111
     title = "Meet the Parents"
   if text[0] == "T":
-    xtStart = 74
+    xtStart = 84
     xStart = 80
     title = "A League of Their Own"
   if text[0] == "W":
-    xtStart = 12
+    xtStart = 27
     xStart = 143
     title = "Spaceballs"
   
